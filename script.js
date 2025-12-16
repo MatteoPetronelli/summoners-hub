@@ -1,8 +1,7 @@
-/* script.js */
 document.addEventListener('DOMContentLoaded', async () => {
     
     const BASE_URL = 'https://ddragon.leagueoflegends.com';
-    let currentVersion = '14.1.1'; 
+    let currentVersion = '15.24.1'; 
     let championsList = [];
     let displayedCount = 0;
     const ITEMS_PER_PAGE = 20;
