@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="description" content="Analysez les matchups League of Legends. Comparez les statistiques de base et la difficulté des champions pour dominer votre phase de lane.">
+    
     <meta http-equiv="Content-Security-Policy" content="
         default-src 'self'; 
         script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; 
@@ -13,7 +14,12 @@
         connect-src 'self' https://ddragon.leagueoflegends.com https://cdn.jsdelivr.net data:;
     ">
 
-    <title>Matchup Analyzer — Summoner's Hub</title>
+    <title>Duel de Stats — Summoner's Hub</title>
+    
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style type="text/tailwindcss">
@@ -27,133 +33,161 @@
             --font-display: 'Cinzel', serif;
             --font-body: 'Inter', sans-serif;
         }
+        .vs-text {
+            text-shadow: 0 0 20px rgba(200, 170, 110, 0.5);
+        }
     </style>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body class="bg-lol-dark text-lol-gold-light font-body">
 
-    <header class="fixed top-0 w-full z-50 bg-lol-dark/90 backdrop-blur-md border-b border-lol-gold/20">
+    <header class="fixed top-0 w-full z-50 bg-lol-dark/90 backdrop-blur-md border-b border-lol-gold/20 shadow-lg">
         <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
-            <a href="index.html" class="flex items-center gap-2 hover:text-lol-blue transition-colors">
-                <span class="text-2xl">←</span> <span class="font-bold uppercase tracking-widest">Retour</span>
+            <a href="index.html" class="flex items-center gap-2 hover:text-lol-blue transition-colors group">
+                <span class="text-2xl group-hover:-translate-x-1 transition-transform">←</span> 
+                <span class="font-bold uppercase tracking-widest text-sm md:text-base">Retour au Hub</span>
             </a>
-            <h1 class="text-xl font-display font-bold text-lol-gold">Comparateur de Matchup</h1>
+            <h1 class="text-xl font-display font-bold text-lol-gold">Duel de Stats</h1>
         </div>
     </header>
 
-    <main class="pt-32 pb-20 px-6 max-w-5xl mx-auto">
+    <main class="pt-32 pb-20 px-6 max-w-6xl mx-auto min-h-screen flex flex-col justify-center">
         
-        <div class="flex flex-col md:flex-row gap-8 justify-center items-center mb-12">
-            <div class="w-full md:w-1/3">
-                <label class="block text-lol-blue uppercase text-xs font-bold mb-2">Allié</label>
-                <select id="champ1" class="w-full bg-lol-darker border border-lol-gold/30 rounded p-3 text-white focus:border-lol-gold outline-none"></select>
-            </div>
+        <div class="text-center mb-12">
+            <h2 class="text-3xl md:text-5xl font-display text-white mb-4 uppercase tracking-widest">Face à Face</h2>
+            <p class="text-gray-400">Comparez les statistiques de base des champions.</p>
+        </div>
+
+        <div class="bg-lol-darker border border-lol-gold/30 rounded-xl p-6 md:p-12 relative shadow-2xl overflow-hidden">
             
-            <div class="text-4xl text-lol-gold font-display font-bold">VS</div>
+            <div class="absolute inset-0 pointer-events-none opacity-20 z-0">
+                <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Aatrox_0.jpg" 
+                     alt="" 
+                     class="w-full h-full object-cover blur-sm mix-blend-overlay"
+                     crossorigin="anonymous"
+                     loading="lazy">
+            </div>
 
-            <div class="w-full md:w-1/3">
-                <label class="block text-red-500 uppercase text-xs font-bold mb-2">Ennemi</label>
-                <select id="champ2" class="w-full bg-lol-darker border border-lol-gold/30 rounded p-3 text-white focus:border-red-500 outline-none"></select>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 relative z-10">
+                
+                <div class="flex flex-col items-center">
+                    <label for="champ1" class="text-lol-blue font-bold uppercase tracking-widest mb-3 text-sm">Votre Champion</label>
+                    <select id="champ1" class="w-full max-w-xs bg-[#050a12] border border-lol-gold/50 rounded px-4 py-3 text-white focus:outline-none focus:border-lol-blue transition-colors cursor-pointer mb-8">
+                        <option value="">Sélectionner...</option>
+                    </select>
+
+                    <div id="display1" class="text-center opacity-50 transition-all duration-500">
+                        <div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-gray-700 bg-black mx-auto mb-6 overflow-hidden relative shadow-lg">
+                            <img id="img1" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" class="w-full h-full object-cover">
+                        </div>
+                        <h3 id="name1" class="text-2xl font-display text-gray-500 font-bold mb-4">-</h3>
+                        <div id="stats1" class="space-y-2 text-sm w-full max-w-xs mx-auto"></div>
+                    </div>
+                </div>
+
+                <div class="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 items-center justify-center w-16 h-16 rounded-full bg-lol-gold text-lol-darker font-black text-xl z-20 vs-text border-4 border-lol-darker">
+                    VS
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <label for="champ2" class="text-red-400 font-bold uppercase tracking-widest mb-3 text-sm">Adversaire</label>
+                    <select id="champ2" class="w-full max-w-xs bg-[#050a12] border border-lol-gold/50 rounded px-4 py-3 text-white focus:outline-none focus:border-red-500 transition-colors cursor-pointer mb-8">
+                        <option value="">Sélectionner...</option>
+                    </select>
+
+                    <div id="display2" class="text-center opacity-50 transition-all duration-500">
+                        <div class="w-32 h-32 md:w-48 md:h-48 rounded-full border-4 border-gray-700 bg-black mx-auto mb-6 overflow-hidden relative shadow-lg">
+                            <img id="img2" src="data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=" alt="" class="w-full h-full object-cover">
+                        </div>
+                        <h3 id="name2" class="text-2xl font-display text-gray-500 font-bold mb-4">-</h3>
+                        <div id="stats2" class="space-y-2 text-sm w-full max-w-xs mx-auto"></div>
+                    </div>
+                </div>
+
             </div>
         </div>
 
-        <div id="comparison" class="grid grid-cols-2 gap-px bg-lol-gold/20 border border-lol-gold/30 rounded-lg overflow-hidden hidden">
-            <div class="bg-lol-darker p-6 text-center" id="side1">
-                <img id="img1" src="" class="w-24 h-24 rounded-full mx-auto border-4 border-lol-blue mb-4 shadow-lg shadow-lol-blue/20">
-                <h3 id="name1" class="text-2xl font-display font-bold text-white mb-6"></h3>
-                <div class="space-y-4 text-sm" id="stats1"></div>
-            </div>
-
-            <div class="bg-lol-darker p-6 text-center" id="side2">
-                <img id="img2" src="" class="w-24 h-24 rounded-full mx-auto border-4 border-red-500 mb-4 shadow-lg shadow-red-500/20">
-                <h3 id="name2" class="text-2xl font-display font-bold text-white mb-6"></h3>
-                <div class="space-y-4 text-sm" id="stats2"></div>
-            </div>
-        </div>
     </main>
 
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
-            const s1 = document.getElementById('champ1');
-            const s2 = document.getElementById('champ2');
-            let champions = [];
-            let version = '';
+            const select1 = document.getElementById('champ1');
+            const select2 = document.getElementById('champ2');
+            let championsData = {};
+            let version = '14.1.1';
 
-            // Fetch Data
-            const vRes = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
-            const vData = await vRes.json();
-            version = vData[0];
-            const cRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`);
-            const cData = await cRes.json();
-            champions = Object.values(cData.data).sort((a,b) => a.name.localeCompare(b.name));
+            try {
+                const vRes = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
+                const vData = await vRes.json();
+                version = vData[0];
 
-            // Populate Selects
-            const populate = (sel) => {
-                sel.innerHTML = '<option value="">Choisir un champion...</option>';
-                champions.forEach(c => {
-                    const opt = document.createElement('option');
-                    opt.value = c.id;
-                    opt.textContent = c.name;
-                    sel.appendChild(opt);
-                });
-            };
-            populate(s1);
-            populate(s2);
+                const cRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/champion.json`);
+                const cData = await cRes.json();
+                championsData = cData.data;
 
-            // Update UI Function
-            const update = () => {
-                const c1 = champions.find(c => c.id === s1.value);
-                const c2 = champions.find(c => c.id === s2.value);
-                const container = document.getElementById('comparison');
+                const sortedChamps = Object.values(championsData).sort((a, b) => a.name.localeCompare(b.name));
 
-                if(c1 && c2) {
-                    container.classList.remove('hidden');
-                    
-                    // Render Helper
-                    const setSide = (sideId, imgId, nameId, statsId, char, opponent) => {
-                        document.getElementById(imgId).src = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${char.image.full}`;
-                        document.getElementById(nameId).textContent = char.name;
-                        
-                        const s = char.stats;
-                        const o = opponent.stats;
-                        
-                        const compare = (val1, val2) => {
-                            if(val1 > val2) return 'text-green-400 font-bold';
-                            if(val1 < val2) return 'text-red-400';
-                            return 'text-gray-400';
-                        };
+                const populate = (sel) => {
+                    sortedChamps.forEach(c => {
+                        const opt = document.createElement('option');
+                        opt.value = c.id;
+                        opt.textContent = c.name;
+                        sel.appendChild(opt);
+                    });
+                };
 
-                        document.getElementById(statsId).innerHTML = `
-                            <div class="flex justify-between border-b border-gray-700 pb-2">
-                                <span>HP (Niv 1)</span>
-                                <span class="${compare(s.hp, o.hp)}">${s.hp}</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2">
-                                <span>Attaque</span>
-                                <span class="${compare(s.attackdamage, o.attackdamage)}">${s.attackdamage}</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2">
-                                <span>Armure</span>
-                                <span class="${compare(s.armor, o.armor)}">${s.armor}</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2">
-                                <span>Vitesse d'Attaque</span>
-                                <span class="${compare(s.attackspeed, o.attackspeed)}">${s.attackspeed.toFixed(3)}</span>
-                            </div>
-                            <div class="flex justify-between border-b border-gray-700 pb-2">
-                                <span>Portée</span>
-                                <span class="${compare(s.attackrange, o.attackrange)}">${s.attackrange}</span>
-                            </div>
-                        `;
-                    };
+                populate(select1);
+                populate(select2);
 
-                    setSide('side1', 'img1', 'name1', 'stats1', c1, c2);
-                    setSide('side2', 'img2', 'name2', 'stats2', c2, c1);
+            } catch (e) {
+                console.error("Erreur API", e);
+            }
+
+            const updateDisplay = (side, id) => {
+                const display = document.getElementById(`display${side}`);
+                const img = document.getElementById(`img${side}`);
+                const name = document.getElementById(`name${side}`);
+                const statsDiv = document.getElementById(`stats${side}`);
+
+                if (!id) {
+                    display.classList.add('opacity-50');
+                    img.src = "data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs=";
+                    name.textContent = "-";
+                    statsDiv.innerHTML = "";
+                    return;
                 }
+
+                const champ = championsData[id];
+                display.classList.remove('opacity-50');
+                
+                // Images JS : Ajout crossorigin pour supprimer les cookies
+                img.crossOrigin = "anonymous";
+                img.src = `https://ddragon.leagueoflegends.com/cdn/${version}/img/champion/${champ.image.full}`;
+                img.alt = `Portrait de ${champ.name}`;
+                
+                name.textContent = champ.name;
+                name.className = `text-2xl font-display font-bold mb-4 ${side === '1' ? 'text-lol-blue' : 'text-red-400'}`;
+
+                const stats = [
+                    { label: 'Attaque', val: champ.info.attack, color: 'bg-red-500' },
+                    { label: 'Défense', val: champ.info.defense, color: 'bg-green-500' },
+                    { label: 'Magie', val: champ.info.magic, color: 'bg-blue-500' },
+                    { label: 'Difficulté', val: champ.info.difficulty, color: 'bg-purple-500' }
+                ];
+
+                statsDiv.innerHTML = stats.map(s => `
+                    <div class="flex items-center justify-between mb-1">
+                        <span class="text-gray-400 uppercase text-xs font-bold">${s.label}</span>
+                        <span class="text-white font-bold">${s.val}</span>
+                    </div>
+                    <div class="w-full bg-gray-800 h-2 rounded-full overflow-hidden">
+                        <div class="${s.color} h-full" style="width: ${s.val * 10}%"></div>
+                    </div>
+                `).join('');
             };
 
-            s1.addEventListener('change', update);
-            s2.addEventListener('change', update);
+            select1.addEventListener('change', (e) => updateDisplay('1', e.target.value));
+            select2.addEventListener('change', (e) => updateDisplay('2', e.target.value));
         });
     </script>
 </body>
