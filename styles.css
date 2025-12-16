@@ -1,0 +1,30 @@
+/* styles.css */
+
+/* Custom Scrollbar (Style Webkit) */
+::-webkit-scrollbar {
+    width: 8px;
+}
+::-webkit-scrollbar-track {
+    background: #091428; 
+}
+::-webkit-scrollbar-thumb {
+    background: #005A82; 
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #0AC8B9; 
+}
+
+/* Utilitaires visuels standards */
+.mask-image-gradient {
+    -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
+}
+
+/* Modal text scrollbar customization */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #C8AA6E;
+}

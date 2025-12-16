@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Summoner's Hub - Base de données complète pour League of Legends. Guides, builds, stats et lore des champions mis à jour avec le patch actuel.">
+    
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; 
+        style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; 
+        font-src https://fonts.gstatic.com; 
+        img-src 'self' https://ddragon.leagueoflegends.com data:; 
+        connect-src 'self' https://ddragon.leagueoflegends.com https://cdn.jsdelivr.net data:;
+    ">
+    
+    <title>Summoner's Hub — Data Dragon</title>
+    
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <style type="text/tailwindcss">
+        @theme {
+            --color-lol-dark: #091428;
+            --color-lol-darker: #0a1428;
+            --color-lol-gold: #C8AA6E;
+            --color-lol-gold-light: #F0E6D2;
+            --color-lol-blue: #0AC8B9;
+            --color-lol-blue-dim: #005A82;
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .mask-image-gradient {
+            -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+            mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-lol-dark text-lol-gold-light font-body antialiased overflow-x-hidden">
+
+    <header class="fixed top-0 w-full z-50 bg-lol-dark/90 backdrop-blur-md border-b border-lol-gold/20 shadow-2xl">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-lol-blue to-lol-blue-dim flex items-center justify-center font-bold text-white shadow-[0_0_15px_rgba(10,200,185,0.5)]">
+                    SH
+                </div>
+                <div>
+                    <h1 class="text-xl font-display font-bold text-lol-gold tracking-wider">Summoner's Hub</h1>
+                    <p class="text-[10px] uppercase tracking-[0.2em] text-lol-blue">Data Dragon API</p>
+                </div>
+            </div>
+
+            <nav class="hidden md:flex gap-8">
+                <a href="#home" class="hover:text-lol-blue transition-colors font-semibold text-sm uppercase tracking-wide">Accueil</a>
+                <a href="#champions" class="hover:text-lol-blue transition-colors font-semibold text-sm uppercase tracking-wide">Champions</a>
+                <a href="#presentation" class="hover:text-lol-blue transition-colors font-semibold text-sm uppercase tracking-wide">Le Jeu</a>
+                <a href="#features" class="hover:text-lol-blue transition-colors font-semibold text-sm uppercase tracking-wide">Outils</a>
+                <a href="#contact" class="hover:text-lol-blue transition-colors font-semibold text-sm uppercase tracking-wide">Contact</a>
+            </nav>
+            
+            <button id="menuBtn" class="md:hidden text-2xl text-lol-gold p-2" aria-label="Menu">☰</button>
+        </div>
+        
+        <div id="mobileMenu" class="hidden md:hidden absolute top-20 left-0 w-full bg-lol-darker border-b border-lol-gold/30 p-6 flex-col gap-4 text-center shadow-xl">
+            <a href="#home" class="block py-2 hover:text-lol-blue">Accueil</a>
+            <a href="#champions" class="block py-2 hover:text-lol-blue">Champions</a>
+            <a href="#presentation" class="block py-2 hover:text-lol-blue">Le Jeu</a>
+            <a href="#features" class="block py-2 hover:text-lol-blue">Outils</a> <a href="#contact" class="block py-2 hover:text-lol-blue">Contact</a>
+        </div>
+    </header>
+
+    <main id="home">
+        <section class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+            <div class="absolute inset-0 z-0">
+                <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ahri_0.jpg" 
+                     alt="League of Legends Background" 
+                     width="1215" height="717" 
+                     crossorigin="anonymous"
+                     class="w-full h-full object-cover opacity-30 mask-image-gradient">
+                <div class="absolute inset-0 bg-gradient-to-t from-lol-dark via-lol-dark/50 to-transparent"></div>
+            </div>
+
+            <div class="relative z-10 max-w-4xl mx-auto text-center px-4">
+                <h2 class="text-5xl md:text-7xl font-display font-bold text-transparent bg-clip-text bg-gradient-to-b from-lol-gold to-[#785A28] mb-6 drop-shadow-sm">
+                    Forge ton Destin
+                </h2>
+                <p class="text-lg md:text-xl text-gray-300 mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Explorez la base de données officielle. Découvrez les histoires, les statistiques et les compétences de plus de 160 champions.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center">
+                    <a href="#champions" class="px-8 py-3 bg-lol-blue hover:bg-white text-lol-darker font-bold rounded flex items-center justify-center gap-2 transition-all transform hover:scale-105 shadow-[0_0_20px_rgba(10,200,185,0.4)]">
+                        <span>Explorer les Champions</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="champions" class="py-24 px-4 max-w-7xl mx-auto relative">
+            <div class="flex flex-col md:flex-row justify-between items-end mb-12 border-b border-lol-gold/20 pb-4">
+                <div>
+                    <h3 class="text-3xl font-display text-lol-gold mb-2">Roster des Champions</h3>
+                    <p class="text-gray-400">Données du patch actuel.</p>
+                </div>
+                <div class="mt-4 md:mt-0 relative w-full md:w-64">
+                    <input type="text" id="searchInput" placeholder="Rechercher..." 
+                           class="w-full bg-lol-darker border border-lol-gold/30 rounded px-4 py-2 text-white focus:outline-none focus:border-lol-blue transition-colors placeholder-gray-500">
+                    <span class="absolute right-3 top-2.5 text-gray-500">🔍</span>
+                </div>
+            </div>
+
+            <div id="loader" class="text-center py-20">
+                <div class="inline-block w-12 h-12 border-4 border-lol-blue border-t-transparent rounded-full animate-spin"></div>
+                <p class="mt-4 text-lol-blue animate-pulse">Invocation des données...</p>
+            </div>
+
+            <div id="championGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6 hidden">
+                </div>
+            
+            <div class="mt-12 text-center">
+                <button id="loadMoreBtn" class="hidden px-6 py-2 border border-lol-gold text-lol-gold hover:bg-lol-gold hover:text-lol-dark transition-colors font-bold uppercase tracking-widest text-sm">
+                    Charger plus
+                </button>
+            </div>
+        </section>
+
+        <section id="presentation" class="bg-lol-darker border-y border-lol-gold/10">
+            <div class="grid md:grid-cols-2 min-h-[500px]">
+                <div class="relative h-64 md:h-auto overflow-hidden">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ryze_0.jpg" 
+                         alt="Ryze étudiant les runes" 
+                         width="1215" height="717"
+                         loading="lazy"
+                         crossorigin="anonymous"
+                         class="w-full h-full object-cover transition-transform duration-700 hover:scale-105">
+                    <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-lol-darker via-transparent to-transparent"></div>
+                </div>
+
+                <div class="flex flex-col justify-center p-12 md:p-20">
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-lol-gold mb-6 uppercase tracking-wider">
+                        L'Histoire de Runeterra
+                    </h2>
+                    <div class="w-16 h-1 bg-lol-blue mb-8"></div>
+                    <p class="text-gray-300 leading-relaxed text-lg mb-6">
+                        Plongez au cœur d'un monde déchiré par la magie et le conflit. De la grandeur impériale de Noxus aux sommets glacés de Freljord, chaque champion porte les cicatrices de son passé.
+                    </p>
+                    <p class="text-gray-400 leading-relaxed mb-8">
+                        Summoner's Hub rassemble ces légendes pour vous offrir une compréhension tactique et narrative sans précédent.
+                    </p>
+                    <a href="https://universe.leagueoflegends.com/fr_FR/" target="_blank" rel="noopener noreferrer" class="text-lol-blue font-bold hover:text-white transition-colors flex items-center gap-2 w-fit group">
+                        Découvrir l'Univers 
+                        <span class="group-hover:translate-x-1 transition-transform">→</span>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="features" class="relative py-24 bg-gradient-to-b from-lol-dark to-[#050a12]">
+            <div class="max-w-7xl mx-auto px-6 relative z-10">
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl md:text-4xl font-display font-bold text-lol-gold mb-4 uppercase tracking-wider">L'Arsenal de l'Invocateur</h2>
+                    <div class="w-24 h-1 mx-auto bg-gradient-to-r from-transparent via-lol-blue to-transparent mb-6"></div>
+                </div>
+
+                <div class="grid md:grid-cols-3 gap-8">
+                    <a href="builds.html" class="block group bg-lol-darker/80 backdrop-blur-sm border border-lol-gold/20 p-8 rounded-xl hover:border-lol-blue transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+                        <div class="w-14 h-14 bg-lol-blue/10 rounded-lg flex items-center justify-center mb-6 border border-lol-blue/30 text-lol-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 mb-3 font-display">Objets & Builds</h3>
+                        <p class="text-gray-400 text-sm">Explorateur d'objets complet.</p>
+                    </a>
+                    <a href="matchups.html" class="block group bg-lol-darker/80 backdrop-blur-sm border border-lol-gold/20 p-8 rounded-xl hover:border-lol-blue transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+                        <div class="w-14 h-14 bg-lol-blue/10 rounded-lg flex items-center justify-center mb-6 border border-lol-blue/30 text-lol-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 mb-3 font-display">Duel de Stats</h3>
+                        <p class="text-gray-400 text-sm">Comparateur de statistiques.</p>
+                    </a>
+                    <a href="guides.html" class="block group bg-lol-darker/80 backdrop-blur-sm border border-lol-gold/20 p-8 rounded-xl hover:border-lol-blue transition-all duration-300 hover:-translate-y-2 cursor-pointer">
+                        <div class="w-14 h-14 bg-lol-blue/10 rounded-lg flex items-center justify-center mb-6 border border-lol-blue/30 text-lol-blue">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                        </div>
+                        <h3 class="text-xl font-bold text-gray-100 mb-3 font-display">Guides Challenger</h3>
+                        <p class="text-gray-400 text-sm">Apprenez la macro et le wave management.</p>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contact" class="py-20 px-6">
+            <div class="max-w-xl mx-auto bg-lol-darker p-8 rounded-lg border border-lol-gold/20 shadow-2xl">
+                <h3 class="text-2xl font-display text-lol-gold text-center mb-8">Contacter le Support</h3>
+                
+                <form class="space-y-6">
+                    <div>
+                        <label for="email" class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Adresse Email</label>
+                        <input type="email" id="email" required 
+                               class="w-full bg-[#050a12] border border-gray-700 rounded p-3 text-white focus:border-lol-blue focus:outline-none transition-colors placeholder-gray-600"
+                               placeholder="invocateur@exemple.com">
+                    </div>
+                    
+                    <div>
+                        <label for="message" class="block text-sm font-bold text-gray-400 mb-2 uppercase tracking-wide">Message</label>
+                        <textarea id="message" rows="4" required
+                                  class="w-full bg-[#050a12] border border-gray-700 rounded p-3 text-white focus:border-lol-blue focus:outline-none transition-colors placeholder-gray-600"
+                                  placeholder="Signaler un bug ou proposer une idée..."></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full py-3 bg-gradient-to-r from-lol-blue-dim to-lol-blue text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_15px_rgba(10,200,185,0.3)] rounded border border-white/10">
+                        Envoyer le message
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="championModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4">
+        <div id="modalOverlay" class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity"></div>
+        <div class="relative w-full max-w-4xl bg-lol-darker border border-lol-gold rounded-lg shadow-2xl overflow-hidden flex flex-col md:flex-row max-h-[90vh]">
+            <div id="modalImgContainer" class="h-48 md:h-auto md:w-2/5 bg-cover bg-center relative">
+                <div class="absolute inset-0 bg-gradient-to-t md:bg-gradient-to-r from-lol-darker to-transparent"></div>
+            </div>
+            <div class="p-8 md:w-3/5 overflow-y-auto custom-scrollbar relative flex flex-col">
+                <button id="closeModal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl" aria-label="Fermer">&times;</button>
+                <h2 id="modalName" class="text-4xl font-display font-bold text-lol-gold mb-1">Nom</h2>
+                <h3 id="modalTitle" class="text-lg text-lol-blue uppercase tracking-widest mb-6">Titre</h3>
+                <div class="space-y-6 flex-grow">
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-500 uppercase mb-2 border-b border-gray-700 pb-1">Lore</h4>
+                        <p id="modalDesc" class="text-gray-300 leading-relaxed text-sm italic"></p>
+                    </div>
+                    <div>
+                        <h4 class="text-sm font-bold text-gray-500 uppercase mb-3 border-b border-gray-700 pb-1">Statistiques</h4>
+                        <div class="grid grid-cols-2 gap-4 text-sm">
+                            <div class="flex justify-between"><span class="text-gray-400">Attaque:</span> <span id="statAtk" class="text-lol-gold"></span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Défense:</span> <span id="statDef" class="text-lol-gold"></span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Magie:</span> <span id="statMag" class="text-lol-gold"></span></div>
+                            <div class="flex justify-between"><span class="text-gray-400">Difficulté:</span> <span id="statDiff" class="text-lol-gold"></span></div>
+                        </div>
+                    </div>
+                    <div id="modalTags" class="flex gap-2 mt-4"></div>
+                </div>
+                <div class="mt-8 pt-6 border-t border-gray-700">
+                    <a id="guideLink" href="#" class="block w-full text-center py-3 bg-gradient-to-r from-lol-blue-dim to-lol-blue text-white font-bold uppercase tracking-widest hover:brightness-110 transition-all shadow-[0_0_20px_rgba(10,200,185,0.3)] rounded border border-white/10">
+                        Accéder au Guide Complet
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <section id="faq" class="py-24 px-6 bg-gradient-to-t from-[#050a12] to-lol-dark">
+        <div class="max-w-3xl mx-auto">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-display font-bold text-lol-gold mb-4">Questions Fréquentes</h2>
+                <div class="w-16 h-1 mx-auto bg-lol-blue"></div>
+            </div>
+
+            <div class="space-y-4">
+                <details class="group bg-lol-darker border border-lol-gold/20 rounded-lg open:border-lol-gold open:bg-[#0f1923] transition-all duration-300">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer list-none text-lg font-bold text-gray-200 group-hover:text-lol-gold transition-colors">
+                        <span>Comment les builds sont-ils mis à jour ?</span>
+                        <span class="transform group-open:rotate-180 transition-transform duration-300 text-lol-blue">▼</span>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 leading-relaxed border-t border-white/5 pt-4 animate-fade-in">
+                        Nos données sont synchronisées en temps réel avec l'API officielle Riot Games (Data Dragon). Dès qu'un patch est déployé sur les serveurs live, les statistiques et les objets sont actualisés automatiquement.
+                    </div>
+                </details>
+
+                <details class="group bg-lol-darker border border-lol-gold/20 rounded-lg open:border-lol-gold open:bg-[#0f1923] transition-all duration-300">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer list-none text-lg font-bold text-gray-200 group-hover:text-lol-gold transition-colors">
+                        <span>Le site est-il adapté aux débutants ?</span>
+                        <span class="transform group-open:rotate-180 transition-transform duration-300 text-lol-blue">▼</span>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 leading-relaxed border-t border-white/5 pt-4 animate-fade-in">
+                        Absolument. Summoner's Hub propose des guides détaillés sur la macro-gestion, le vocabulaire du jeu et des builds simplifiés pour commencer sans se perdre dans la complexité de la boutique.
+                    </div>
+                </details>
+
+                <details class="group bg-lol-darker border border-lol-gold/20 rounded-lg open:border-lol-gold open:bg-[#0f1923] transition-all duration-300">
+                    <summary class="flex justify-between items-center p-6 cursor-pointer list-none text-lg font-bold text-gray-200 group-hover:text-lol-gold transition-colors">
+                        <span>Puis-je voir les skins des champions ?</span>
+                        <span class="transform group-open:rotate-180 transition-transform duration-300 text-lol-blue">▼</span>
+                    </summary>
+                    <div class="px-6 pb-6 text-gray-400 leading-relaxed border-t border-white/5 pt-4 animate-fade-in">
+                        Actuellement, nous affichons le Splash Art de base (Skin par défaut) pour garantir une performance optimale. Une galerie de skins complète est prévue pour la version 2.0 du site.
+                    </div>
+                </details>
+            </div>
+        </div>
+    </section>
+
+    <footer class="bg-lol-darker border-t border-lol-gold/10 py-12 text-center">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex items-center justify-center gap-3 mb-4">
+                <div class="w-8 h-8 rounded-full bg-gradient-to-br from-lol-blue to-lol-blue-dim flex items-center justify-center font-bold text-white text-xs">SH</div>
+                <span class="font-display font-bold text-lol-gold text-lg">Summoner's Hub</span>
+            </div>
+            
+            <p class="text-sm text-lol-gold">
+                &copy; 2025 Summoner's Hub. Tous droits réservés.<br>
+                Projet réalisé par Matteo Petronelli.
+            </p>
+            
+            <p class="text-xs text-gray-400 mt-4 max-w-2xl mx-auto leading-relaxed">
+                Ce site n'est pas affilié à Riot Games. League of Legends et Riot Games sont des marques commerciales ou des marques déposées de Riot Games, Inc.
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>

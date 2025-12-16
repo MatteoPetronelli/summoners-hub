@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Guides stratégiques League of Legends : Apprenez la macro, le wave management, le pathing jungle et la vision avec nos guides challenger.">
+    
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; 
+        style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; 
+        font-src https://fonts.gstatic.com; 
+        img-src 'self' https://ddragon.leagueoflegends.com data:; 
+        connect-src 'self' https://ddragon.leagueoflegends.com https://cdn.jsdelivr.net data:;
+    ">
+
+    <title>Guides Challenger — Summoner's Hub</title>
+    
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-lol-dark: #091428;
+            --color-lol-darker: #0a1428;
+            --color-lol-gold: #C8AA6E;
+            --color-lol-gold-light: #F0E6D2;
+            --color-lol-blue: #0AC8B9;
+            --color-lol-blue-dim: #005A82;
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-lol-dark text-lol-gold-light font-body">
+
+    <header class="fixed top-0 w-full z-50 bg-lol-dark/90 backdrop-blur-md border-b border-lol-gold/20 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 hover:text-lol-blue transition-colors group">
+                <span class="text-2xl group-hover:-translate-x-1 transition-transform">←</span> 
+                <span class="font-bold uppercase tracking-widest text-sm md:text-base">Retour au Hub</span>
+            </a>
+            <h1 class="text-xl font-display font-bold text-lol-gold">Académie Challenger</h1>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20 px-6 max-w-7xl mx-auto">
+        <div class="text-center mb-16">
+            <h2 class="text-3xl font-display text-white mb-4">Maîtrisez la Macro</h2>
+            <p class="text-gray-400">Sélection de guides essentiels pour monter en Elo.</p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            
+            <article class="bg-lol-darker border border-lol-gold/20 rounded-xl overflow-hidden group hover:border-lol-blue transition-all cursor-pointer flex flex-col shadow-lg">
+                <div class="h-48 relative overflow-hidden">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Ryze_0.jpg" 
+                         alt="Guide Wave Management avec Ryze" 
+                         width="400" height="225"
+                         loading="lazy"
+                         crossorigin="anonymous"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                    <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 text-xs rounded font-bold text-white border border-gray-600">12:45</div>
+                </div>
+                
+                <div class="p-6 flex-grow">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold bg-lol-blue/10 text-lol-blue border border-lol-blue/30 px-2 py-1 rounded">Macro</span>
+                        <span class="text-[10px] uppercase font-bold bg-purple-500/10 text-purple-300 border border-purple-500/30 px-2 py-1 rounded">Midlane</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-lol-gold transition-colors">Wave Management Avancé</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Comprendre le Slow Push, le Freeze et quand Reset pour dominer votre lane sans tuer.</p>
+                </div>
+            </article>
+
+            <article class="bg-lol-darker border border-lol-gold/20 rounded-xl overflow-hidden group hover:border-lol-blue transition-all cursor-pointer flex flex-col shadow-lg">
+                <div class="h-48 relative overflow-hidden">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/LeeSin_0.jpg" 
+                         alt="Guide Jungle Pathing avec Lee Sin" 
+                         width="400" height="225"
+                         loading="lazy"
+                         crossorigin="anonymous"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                    <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 text-xs rounded font-bold text-white border border-gray-600">08:20</div>
+                </div>
+                
+                <div class="p-6 flex-grow">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold bg-green-500/10 text-green-300 border border-green-500/30 px-2 py-1 rounded">Jungle</span>
+                        <span class="text-[10px] uppercase font-bold bg-yellow-500/10 text-yellow-300 border border-yellow-500/30 px-2 py-1 rounded">Pathing</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-lol-gold transition-colors">Le Jungle Pathing en S14</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Optimiser votre route pour être au niveau 4 avant l'apparition du Carapateur.</p>
+                </div>
+            </article>
+
+            <article class="bg-lol-darker border border-lol-gold/20 rounded-xl overflow-hidden group hover:border-lol-blue transition-all cursor-pointer flex flex-col shadow-lg">
+                <div class="h-48 relative overflow-hidden">
+                    <img src="https://ddragon.leagueoflegends.com/cdn/img/champion/splash/Leona_0.jpg" 
+                         alt="Guide Vision avec Leona" 
+                         width="400" height="225"
+                         loading="lazy"
+                         crossorigin="anonymous"
+                         class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110">
+                    
+                    <div class="absolute inset-0 bg-black/40 group-hover:bg-transparent transition-all duration-300"></div>
+                    <div class="absolute bottom-2 right-2 bg-black/80 px-2 py-0.5 text-xs rounded font-bold text-white border border-gray-600">15:10</div>
+                </div>
+                
+                <div class="p-6 flex-grow">
+                    <div class="flex gap-2 mb-3">
+                        <span class="text-[10px] uppercase font-bold bg-red-500/10 text-red-300 border border-red-500/30 px-2 py-1 rounded">Vision</span>
+                        <span class="text-[10px] uppercase font-bold bg-blue-500/10 text-blue-300 border border-blue-500/30 px-2 py-1 rounded">Support</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2 group-hover:text-lol-gold transition-colors">Guide de la Vision</h3>
+                    <p class="text-sm text-gray-400 leading-relaxed">Les meilleurs emplacements de Wards pour éviter les ganks et sécuriser le Nashor.</p>
+                </div>
+            </article>
+
+        </div>
+    </main>
+</body>
+</html>

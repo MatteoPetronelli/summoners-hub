@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explorateur d'objets League of Legends : Stats, prix et recettes de tous les items pour la saison actuelle. Filtrez par catégorie pour optimiser vos builds.">
+    
+    <meta http-equiv="Content-Security-Policy" content="
+        default-src 'self'; 
+        script-src 'self' https://cdn.jsdelivr.net 'unsafe-inline'; 
+        style-src 'self' https://fonts.googleapis.com 'unsafe-inline'; 
+        font-src https://fonts.gstatic.com; 
+        img-src 'self' https://ddragon.leagueoflegends.com data:; 
+        connect-src 'self' https://ddragon.leagueoflegends.com https://cdn.jsdelivr.net data:;
+    ">
+
+    <title>Objets & Builds — Summoner's Hub</title>
+    
+    <link rel="preconnect" href="https://ddragon.leagueoflegends.com">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Cinzel:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <style type="text/tailwindcss">
+        @theme {
+            --color-lol-dark: #091428;
+            --color-lol-darker: #0a1428;
+            --color-lol-gold: #C8AA6E;
+            --color-lol-gold-light: #F0E6D2;
+            --color-lol-blue: #0AC8B9;
+            --color-lol-blue-dim: #005A82;
+            --font-display: 'Cinzel', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+        
+        /* Styles pour le HTML Riot */
+        .riot-desc { font-size: 0.75rem; line-height: 1.4; }
+        .riot-desc mainText { display: block; }
+        .riot-desc stats { color: #F0E6D2; display: block; margin-bottom: 8px; }
+        .riot-desc attention { color: #ff5859; font-weight: bold; }
+        .riot-desc passive { color: #0AC8B9; font-weight: bold; }
+        .riot-desc active { color: #C8AA6E; font-weight: bold; }
+        .riot-desc br { display: block; content: ""; margin-top: 4px; }
+        .riot-desc .colorDamage { color: #ff5859; }
+        .riot-desc .colorAbilityPower { color: #9f75ff; }
+        .riot-desc .colorHealth { color: #2ecc71; }
+        .riot-desc .colorArmor { color: #f1c40f; }
+        .riot-desc .colorMagicResist { color: #3498db; }
+    </style>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="bg-lol-dark text-lol-gold-light font-body">
+
+    <header class="fixed top-0 w-full z-50 bg-lol-dark/90 backdrop-blur-md border-b border-lol-gold/20 shadow-lg">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="index.html" class="flex items-center gap-2 hover:text-lol-blue transition-colors group">
+                <span class="text-2xl group-hover:-translate-x-1 transition-transform">←</span> 
+                <span class="font-bold uppercase tracking-widest text-sm md:text-base">Retour au Hub</span>
+            </a>
+            <h1 class="text-xl font-display font-bold text-lol-gold">Armurerie Hextech</h1>
+        </div>
+    </header>
+
+    <main class="pt-32 pb-20 px-6 max-w-[1400px] mx-auto">
+        <div class="text-center mb-12">
+            <h2 class="text-3xl font-display text-white mb-4">Objets de la Faille</h2>
+            <p class="text-gray-400 mb-6 text-sm">Passez la souris sur un objet pour voir ses statistiques complètes.</p>
+            
+            <div class="flex flex-wrap justify-center gap-4" id="filters">
+                <button class="filter-btn active px-4 py-2 border border-lol-gold bg-lol-gold text-lol-darker font-bold rounded transition-all cursor-pointer" data-category="all">Tout</button>
+                <button class="filter-btn px-4 py-2 border border-lol-gold/30 text-lol-gold hover:bg-lol-gold/10 rounded transition-all cursor-pointer" data-category="Damage">Attaque</button>
+                <button class="filter-btn px-4 py-2 border border-lol-gold/30 text-lol-gold hover:bg-lol-gold/10 rounded transition-all cursor-pointer" data-category="SpellDamage">Magie</button>
+                <button class="filter-btn px-4 py-2 border border-lol-gold/30 text-lol-gold hover:bg-lol-gold/10 rounded transition-all cursor-pointer" data-category="Defense">Défense</button>
+                <button class="filter-btn px-4 py-2 border border-lol-gold/30 text-lol-gold hover:bg-lol-gold/10 rounded transition-all cursor-pointer" data-category="Boots">Bottes</button>
+                <button class="filter-btn px-4 py-2 border border-lol-gold/30 text-lol-gold hover:bg-lol-gold/10 rounded transition-all cursor-pointer" data-category="Consumable">Conso</button>
+            </div>
+        </div>
+
+        <div id="itemsGrid" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-4">
+            <div class="col-span-full text-center py-10 text-lol-blue animate-pulse">Chargement de l'armurerie...</div>
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const grid = document.getElementById('itemsGrid');
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            try {
+                const vRes = await fetch('https://ddragon.leagueoflegends.com/api/versions.json');
+                const vData = await vRes.json();
+                const version = vData[0];
+
+                const iRes = await fetch(`https://ddragon.leagueoflegends.com/cdn/${version}/data/fr_FR/item.json`);
+                const iData = await iRes.json();
+                
+                const rawItems = Object.values(iData.data);
+
+                const categoryMap = {
+                    'all': [],
+                    'Damage': ['Damage', 'CriticalStrike', 'AttackSpeed', 'LifeSteal'],
+                    'SpellDamage': ['SpellDamage', 'ManaRegen', 'Mana'],
+                    'Defense': ['Health', 'Armor', 'SpellBlock', 'HealthRegen', 'Tenacity'],
+                    'Boots': ['Boots'],
+                    'Consumable': ['Consumable']
+                };
+
+                const render = (category) => {
+                    grid.innerHTML = '';
+                    const seenNames = new Set();
+                    
+                    const validItems = rawItems.filter(item => {
+                        const onRift = item.maps && item.maps['11'] === true;
+                        const isValidItem = item.gold && (item.inStore !== false);
+                        if (seenNames.has(item.name)) return false;
+                        
+                        let matchesCategory = false;
+                        if (category === 'all') {
+                            matchesCategory = true;
+                        } else {
+                            const requiredTags = categoryMap[category];
+                            if (item.tags) {
+                                matchesCategory = item.tags.some(t => requiredTags.includes(t));
+                            }
+                        }
+
+                        if (onRift && isValidItem && matchesCategory) {
+                            seenNames.add(item.name);
+                            return true;
+                        }
+                        return false;
+                    });
+
+                    validItems.sort((a, b) => b.gold.total - a.gold.total);
+
+                    validItems.forEach(item => {
+                        const el = document.createElement('div');
+                        el.className = 'group relative bg-lol-darker border border-gray-800 rounded-lg p-3 hover:border-lol-gold hover:bg-[#0f1d36] transition-all duration-200 z-0 hover:z-50';
+                        
+                        let desc = item.description || "Pas de description.";
+
+                        desc = desc.replace(/<li>/g, '<div class="mb-1 ml-2">• ').replace(/<\/li>/g, '</div>');
+                        
+                        el.innerHTML = `
+                            <div class="flex flex-col items-center">
+                                <img src="https://ddragon.leagueoflegends.com/cdn/${version}/img/item/${item.image.full}" 
+                                     alt="Icône ${item.name}"
+                                     width="48"
+                                     height="48"
+                                     loading="lazy"
+                                     crossorigin="anonymous"
+                                     class="w-12 h-12 rounded border border-gray-700 group-hover:border-lol-blue shadow-lg mb-2">
+                                <div class="text-[10px] text-gray-400 font-bold truncate w-full text-center group-hover:text-white">${item.name}</div>
+                                <div class="text-[10px] text-lol-gold mt-1 flex items-center gap-1">
+                                    <span>${item.gold.total}</span>
+                                    <span class="text-[8px]" aria-label="Pièces d'or">💰</span>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none
+                                        left-1/2 -translate-x-1/2 top-full mt-2 w-64 md:w-72
+                                        bg-[#050a12]/95 backdrop-blur-xl border border-lol-gold 
+                                        rounded-md shadow-[0_0_30px_rgba(0,0,0,0.8)] p-4 z-50">
+                                
+                                <div class="flex justify-between items-start mb-2 border-b border-gray-700 pb-2">
+                                    <strong class="text-lol-gold text-sm font-display">${item.name}</strong>
+                                    <span class="text-xs text-lol-blue">${item.gold.total} PO</span>
+                                </div>
+                                
+                                <div class="riot-desc text-gray-300 text-left">
+                                    ${desc}
+                                </div>
+                            </div>
+                        `;
+                        grid.appendChild(el);
+                    });
+                };
+
+                render('all');
+
+                filterBtns.forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        filterBtns.forEach(b => {
+                            b.classList.remove('bg-lol-gold', 'text-lol-darker');
+                            b.classList.add('text-lol-gold', 'border-lol-gold/30');
+                        });
+                        btn.classList.remove('text-lol-gold', 'border-lol-gold/30');
+                        btn.classList.add('bg-lol-gold', 'text-lol-darker');
+                        
+                        render(btn.dataset.category);
+                    });
+                });
+
+            } catch (e) {
+                console.error(e);
+                grid.innerHTML = '<p class="col-span-full text-red-500 text-center">Erreur lors de la récupération des données Riot Games.</p>';
+            }
+        });
+    </script>
+</body>
+</html>
